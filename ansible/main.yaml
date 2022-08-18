@@ -58,8 +58,7 @@
       state: restarted  
     when: ansible_hostname == 'master'
   - name: clear workdir on slave
-    shell:
-      path: rm -rf /var/lib/pgsql/14/data/
+    shell: rm -rf /var/lib/pgsql/14/data/
     when: ansible_hostname == 'slave'  
   - name: create basebackup
     expect: 
