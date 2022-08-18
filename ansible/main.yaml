@@ -1,0 +1,45 @@
+---   
+- hosts: all
+  become: yes
+  tasks:
+  - name: install packages
+    yum: 
+      name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+      state: present
+      update_cache: true
+  - name: install Postgresql14
+    yum:
+      name: 
+        - postgresql14-server
+        - postgresql14
+        - policycoreutils-python
+        - python-pip
+        - python-setuptools
+      state: present
+      update_cache: true
+  - name: Install pexpect
+    pip:
+      name: pexpect
+  - name: 
+    template: 
+      src: "{{ item }}" 
+      dest: /etc/my.cnf.d/
+      owner: mysql 
+      group: root
+      mode: 0660
+    with_fileglob:
+      - templates/*.conf.j2
+  - name: init db
+    shell: postgresql-14-setup initdb
+  - name: create repl user
+    expect: 
+      command: 
+      timeout: null
+      responses: su - postgres -c "createuser --replication -P repluser"
+        '.*Enter password .*': "12345678q"
+        '.*Enter it.*': "12345678q" 
+  - name: start postgresql
+    systemd:
+      name: postgresql-14
+      enabled: yes
+      state: restarted      
