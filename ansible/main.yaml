@@ -1,5 +1,5 @@
 ---   
-- hosts: all
+- hosts: master, slave
   become: yes
   tasks:
   - name: install packages
