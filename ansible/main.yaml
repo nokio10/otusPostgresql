@@ -53,9 +53,7 @@
         '.*Enter it.*': "12345678q" 
     when: ansible_hostname == 'master'
   - name: restart network on master
-    systemd:
-      name: network
-      state: restarted  
+    shell: systemctl restart network
     when: ansible_hostname == 'master'
   - name: clear workdir on slave
     shell: rm -rf /var/lib/pgsql/14/data/
