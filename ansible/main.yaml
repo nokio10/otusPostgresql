@@ -115,5 +115,5 @@
   - name: Copy config
     template:
       src: templates/pg.conf.j2
-      dest: /etc/barman/barman.conf      
+      dest: /etc/barman/conf.d/pg.conf
       
