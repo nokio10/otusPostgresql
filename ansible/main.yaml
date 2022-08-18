@@ -22,15 +22,6 @@
   - name: Install pexpect
     pip:
       name: pexpect
-  - name: 
-    template: 
-      src: "{{ item }}" 
-      dest: /var/lib/pgsql/14/data/
-      owner: postgres 
-      group: postgres
-      mode: 0600
-    with_fileglob:
-      - templates/*.conf.j2
   - name: init db
     shell: postgresql-14-setup initdb
   - name: create repl user
@@ -41,6 +32,15 @@
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q" 
     when: ansible_hostname == 'master'
+  - name: 
+    template: 
+      src: "{{ item }}" 
+      dest: /var/lib/pgsql/14/data/
+      owner: postgres 
+      group: postgres
+      mode: 0600
+    with_fileglob:
+      - templates/*.conf.j2
   - name: start postgresql
     systemd:
       name: postgresql-14
