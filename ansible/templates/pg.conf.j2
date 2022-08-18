@@ -1,0 +1,8 @@
+[pg]
+description =  "Postgres DB"
+conninfo = host=192.168.11.150 user=barman dbname=postgres
+backup_method = postgres
+archiver = off
+streaming_conninfo =  host=192.168.11.150 user=repluser dbname=postgres
+streaming_archiver = on
+slot_name = barman
