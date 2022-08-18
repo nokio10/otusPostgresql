@@ -23,10 +23,10 @@
   - name: 
     template: 
       src: "{{ item }}" 
-      dest: /etc/my.cnf.d/
-      owner: mysql 
-      group: root
-      mode: 0660
+      dest: /var/lib/pgsql/14/data/
+      owner: postgres 
+      group: postgres
+      mode: 0600
     with_fileglob:
       - templates/*.conf.j2
   - name: init db
