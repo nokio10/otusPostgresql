@@ -55,6 +55,11 @@
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q" 
     when: ansible_hostname == 'master'
+  - name: restart network on master
+    systemd:
+      name: network
+      state: restarted  
+    when: ansible_hostname == 'master'
   - name: create repl user
     expect: 
       command: su - postgres -c "pg_basebackup --host=192.168.11.150 --username=repluser --pgdata=/var/lib/pgsql/14/data --wal-method=stream --write-recovery-conf"
