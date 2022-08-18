@@ -33,9 +33,9 @@
     shell: postgresql-14-setup initdb
   - name: create repl user
     expect: 
-      command: 
+      command: su - postgres -c "createuser --replication -P repluser"
       timeout: null
-      responses: su - postgres -c "createuser --replication -P repluser"
+      responses: 
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q" 
     when: ansible_hostname == 'master'
