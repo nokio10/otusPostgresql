@@ -109,12 +109,12 @@
   - name: Copy barman.conf
     template:
       src: templates/barman.conf.j2
-      dest: /etc/barman/barman.conf
+      dest: /etc/barman.conf
       
   - name: Copy config
     template:
       src: templates/pg.conf.j2
-      dest: /etc/barman/conf.d/pg.conf
+      dest: /etc/barman.d/pg.conf
       
   - name: Start barman
     shell: barman cron && barman receive-wal --create-slot pg && barman switch-xlog --force --archive pg
