@@ -105,10 +105,15 @@
     yum: 
       name: barman
       state: present
-      update_cache: true      
-#  - name: Copy config
-#    template:
-#      src: templates/barman.conf.j2
-#      dest: /etc/barman.conf
+      update_cache: true   
       
+  - name: Copy barman.conf
+    template:
+      src: templates/barman.conf.j2
+      dest: /etc/barman/barman.conf
+      
+  - name: Copy config
+    template:
+      src: templates/pg.conf.j2
+      dest: /etc/barman/barman.conf      
       
