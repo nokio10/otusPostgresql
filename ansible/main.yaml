@@ -95,12 +95,17 @@
 - hosts: backup
   become: yes
   tasks:
-  - name: install packages
+  - name: install epel-release
     yum: 
-      name: barman
+      name: epel-release
       state: present
       update_cache: true
       
+  - name: install barman
+    yum: 
+      name: barman
+      state: present
+      update_cache: true      
 #  - name: Copy config
 #    template:
 #      src: templates/barman.conf.j2
