@@ -117,4 +117,4 @@
       dest: /etc/barman/conf.d/pg.conf
       
   - name: Start barman
-    shell: barman cron && barman receive-wal --create-slot pg
+    shell: barman cron && barman receive-wal --create-slot pg && barman switch-xlog --force --archive pg
