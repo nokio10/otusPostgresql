@@ -51,6 +51,13 @@
       responses: 
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q" 
+  - name: create barman user
+    expect: 
+      command: su - postgres -c "createuser --superuser barman"
+      timeout: null
+      responses: 
+        '.*Enter password .*': "12345678q"
+        '.*Enter it.*': "12345678q"                 
     when: ansible_hostname == 'master'
   - name: restart network on master
     shell: systemctl restart network
@@ -71,3 +78,17 @@
       enabled: yes
       state: restarted  
     when: ansible_hostname == 'slave'
+- hosts: backup
+  become: yes
+  tasks:
+  - name: install packages
+    yum: 
+      name: barman
+      state: present
+      update_cache: true
+#  - name: Copy config
+#    template:
+#      src: templates/barman.conf.j2
+#      dest: /etc/barman.conf
+      
+      
