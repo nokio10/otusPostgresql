@@ -118,6 +118,7 @@
       
   - name: Start barman
     shell: barman cron && barman receive-wal --create-slot pg && barman switch-xlog --force --archive pg
+    async: 120
     
   - name: Add crontab
     shell: echo "*/5 * * * *   barman /usr/bin/barman backup pg" >> /etc/crontab
