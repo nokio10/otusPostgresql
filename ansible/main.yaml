@@ -9,6 +9,7 @@
         - epel-release
       state: present
       update_cache: true
+      
   - name: install Postgresql14
     yum:
       name: 
@@ -19,17 +20,21 @@
         - python-setuptools
       state: present
       update_cache: true
+      
   - name: Install pexpect
     pip:
       name: pexpect
+      
   - name: check init 
     stat:
       path: /var/lib/pgsql/14/data/pg_stat
     register: stat_result
+    
   - name: init db
     shell: postgresql-14-setup initdb
     when: not stat_result.stat.exists and ansible_hostname == 'master'
-  - name: 
+    
+  - name: Copy config files
     template: 
       src: "{{ item }}" 
       dest: /var/lib/pgsql/14/data/
@@ -38,12 +43,14 @@
       mode: 0600
     with_fileglob:
       - templates/*.conf
+      
   - name: start postgresql
     systemd:
       name: postgresql-14
       enabled: yes
       state: restarted  
     when: ansible_hostname == 'master'
+    
   - name: create repl user
     expect: 
       command: su - postgres -c "createuser --replication -P repluser"
@@ -51,6 +58,7 @@
       responses: 
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q" 
+        
   - name: create barman user
     expect: 
       command: su - postgres -c "createuser --superuser barman"
@@ -59,12 +67,15 @@
         '.*Enter password .*': "12345678q"
         '.*Enter it.*': "12345678q"                 
     when: ansible_hostname == 'master'
+    
   - name: restart network on master
     shell: systemctl restart network
     when: ansible_hostname == 'master'
+    
   - name: clear workdir on slave
     shell: rm -rf /var/lib/pgsql/14/data/
     when: ansible_hostname == 'slave'  
+    
   - name: create basebackup
     expect: 
       command: su - postgres -c "pg_basebackup -h 192.168.11.150 -D /var/lib/pgsql/14/data -U repluser -P -v  -R -Xs -Fp -C -S pgstandby1"
@@ -72,12 +83,14 @@
       responses: 
         '.*Password.*': "12345678q"
     when: ansible_hostname == 'slave'
+    
   - name: start postgresql
     systemd:
       name: postgresql-14
       enabled: yes
       state: restarted  
     when: ansible_hostname == 'slave'
+    
 - hosts: backup
   become: yes
   tasks:
@@ -86,6 +99,7 @@
       name: barman
       state: present
       update_cache: true
+      
 #  - name: Copy config
 #    template:
 #      src: templates/barman.conf.j2
