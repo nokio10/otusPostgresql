@@ -4,7 +4,7 @@
   tasks:
   - name: install packages
     yum: 
-      name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+      name: http://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
       state: present
       update_cache: true
   - name: install Postgresql14
