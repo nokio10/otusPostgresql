@@ -1,5 +1,5 @@
 ---   
-- hosts: master, slave
+- hosts: all
   become: yes
   tasks:
   - name: install packages
@@ -9,7 +9,10 @@
         - epel-release
       state: present
       update_cache: true
-      
+
+- hosts: master, slave
+  become: yes
+  tasks:
   - name: install Postgresql14
     yum:
       name: 
@@ -94,16 +97,12 @@
     
 - hosts: backup
   become: yes
-  tasks:
-  - name: install epel-release
-    yum: 
-      name: epel-release
-      state: present
-      update_cache: true
-      
+  tasks:     
   - name: install barman
     yum: 
-      name: barman
+      name: 
+        - barman
+        - postgresql14
       state: present
       update_cache: true   
       
@@ -117,3 +116,5 @@
       src: templates/pg.conf.j2
       dest: /etc/barman/conf.d/pg.conf
       
+  - name: Start barman
+    shell: barman cron && barman receive-wal --create-slot pg
