@@ -32,7 +32,7 @@
       group: postgres
       mode: 0600
     with_fileglob:
-      - templates/*.conf.j2
+      - templates/*.conf
   - name: start postgresql
     systemd:
       name: postgresql-14
