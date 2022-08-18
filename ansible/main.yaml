@@ -56,6 +56,10 @@
       name: network
       state: restarted  
     when: ansible_hostname == 'master'
+  - name: clear workdir on slave
+    shell:
+      path: rm -rf /var/lib/pgsql/14/data/
+    when: ansible_hostname == 'slave'  
   - name: create basebackup
     expect: 
       command: su - postgres -c "pg_basebackup --host=192.168.11.150 --username=repluser --pgdata=/var/lib/pgsql/14/data --wal-method=stream --write-recovery-conf"
