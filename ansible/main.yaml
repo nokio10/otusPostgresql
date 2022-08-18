@@ -26,6 +26,9 @@
     stat:
       path: /var/lib/pgsql/14/data/
     register: stat_result
+  - name: d
+    debug: 
+      msg: stat_result.stat.isdir
   - name: init db
     shell: postgresql-14-setup initdb
     when: not stat_result.stat.exists
