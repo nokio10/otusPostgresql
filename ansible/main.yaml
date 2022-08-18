@@ -41,7 +41,7 @@
       mode: 0600
     with_fileglob:
       - templates/*.conf
-    when: not stat_result.stat.exists
+    when: stat_result.stat.exists
   - name: start postgresql
     systemd:
       name: postgresql-14
