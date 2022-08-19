@@ -70,17 +70,17 @@ t=# \l
            |          |          |             |             | postgres=CTc/postgres
 (3 rows)
 
+[root@backup ~]# barman recover pg 20220819T084502 /var/lib/pgsql/14/data/ --remote-ssh-comman "ssh postgres@192.168.11.150"
+postgres@192.168.11.150's password:
+postgres@192.168.11.150's password:
+Starting remote restore for server pg using backup 20220819T084502
+Destination directory: /var/lib/pgsql/14/data/
 
 [root@master data]# systemctl restart postgresql-14.service
 [root@master data]# su postgres
 bash-4.2$ psql
 psql (14.5)
 Type "help" for help.
-[root@backup ~]# barman recover pg 20220819T084502 /var/lib/pgsql/14/data/ --remote-ssh-comman "ssh postgres@192.168.11.150"
-postgres@192.168.11.150's password:
-postgres@192.168.11.150's password:
-Starting remote restore for server pg using backup 20220819T084502
-Destination directory: /var/lib/pgsql/14/data/
 postgres=# \l
                                   List of databases
    Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
