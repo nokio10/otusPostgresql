@@ -115,10 +115,12 @@
     template:
       src: templates/pg.conf.j2
       dest: /etc/barman.d/pg.conf
-      
-#  - name: Start barman
-#    shell: barman cron && barman receive-wal --create-slot pg && barman switch-xlog --force --archive --archive-timeout 120 seconds pg
-#    async: 150
+
+  - name: Start barman
+    shell: barman cron && barman receive-wal --create-slot pg
     
-#  - name: Add crontab
- #   shell: echo "*/5 * * * *   barman /usr/bin/barman backup pg" >> /etc/crontab
+  - name: Start barman
+    shell: barman switch-xlog --force --archive pg
+    
+  - name: Add crontab
+    shell: echo "*/5 * * * *   barman /usr/bin/barman backup pg" >> /etc/crontab
