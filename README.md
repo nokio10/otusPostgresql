@@ -53,3 +53,42 @@ postgres=# \l
            |          |          |             |             | postgres=CTc/postgres
 (4 rows)
 ```
+
+Проверяю наличие бэкапа и пробую восстановиться.
+
+```
+t=# drop database postgres;
+DROP DATABASE
+t=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ t         | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+
+[root@master data]# systemctl restart postgresql-14.service
+[root@master data]# su postgres
+bash-4.2$ psql
+psql (14.5)
+Type "help" for help.
+[root@backup ~]# barman recover pg 20220819T084502 /var/lib/pgsql/14/data/ --remote-ssh-comman "ssh postgres@192.168.11.150"
+postgres@192.168.11.150's password:
+postgres@192.168.11.150's password:
+Starting remote restore for server pg using backup 20220819T084502
+Destination directory: /var/lib/pgsql/14/data/
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+```
